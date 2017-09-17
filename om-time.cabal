@@ -3,7 +3,7 @@
 
 name:                om-time
 version:             0.1.0.0
--- synopsis:
+synopsis:            Time utilities for OM style programming.
 -- description:
 license:             AllRightsReserved
 license-file:        LICENSE
