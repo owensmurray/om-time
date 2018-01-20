@@ -1,6 +1,7 @@
 flags: {}
 extra-package-dbs: []
 packages:
-- '.'
-extra-deps: []
+- .
+extra-deps:
+- om-json-0.2.1.0
 resolver: lts-9.4
