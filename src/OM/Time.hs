@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 {- | Basic missing time utilities. -}
 module OM.Time (
@@ -6,11 +7,14 @@ module OM.Time (
 ) where
 
 
+import Control.Lens ((&), (.~))
 import Data.Aeson (ToJSON)
 import Data.Binary (Binary, get, put)
 import Data.Proxy (Proxy(Proxy))
-import Data.Swagger (ToSchema, declareNamedSchema)
+import Data.Swagger (ToSchema, declareNamedSchema,
+   NamedSchema(NamedSchema), description)
 import Data.Time (UTCTime(UTCTime), Day(ModifiedJulianDay))
+import OM.JSON (schemaFor)
 
 
 {- | Wrapper around 'UTCTime', used mainly to provide a 'Binary' instance. -}
@@ -27,6 +31,9 @@ instance Binary Time where
     (day, tod) <- get
     return (Time (UTCTime (ModifiedJulianDay day) (fromRational tod)))
 instance ToSchema Time where
-  declareNamedSchema _proxy = declareNamedSchema (Proxy :: Proxy UTCTime)
+  declareNamedSchema _proxy = do
+    schema <- schemaFor (Proxy :: Proxy UTCTime)
+    return . NamedSchema Nothing $ schema
+      & description .~ Just "ISO-8601 time."
 
 
