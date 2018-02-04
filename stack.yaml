@@ -3,5 +3,5 @@ extra-package-dbs: []
 packages:
 - .
 extra-deps:
-- om-json-0.2.1.0
-resolver: lts-9.4
+- om-json-0.2.1.1
+resolver: lts-10.3
