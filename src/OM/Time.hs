@@ -8,7 +8,7 @@ module OM.Time (
 
 
 import Control.Lens ((&), (?~))
-import Data.Aeson (ToJSON, FromJSON)
+import Data.Aeson (ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 import Data.Binary (Binary, get, put)
 import Data.Proxy (Proxy(Proxy))
 import Data.Swagger (ToSchema, declareNamedSchema,
@@ -21,7 +21,7 @@ import OM.JSON (schemaFor)
 newtype Time = Time {
     unTime :: UTCTime
   }
-  deriving (Eq, Ord, ToJSON, FromJSON)
+  deriving (Eq, Ord, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 instance Show Time where
   showsPrec n = showsPrec n . unTime
 instance Binary Time where
