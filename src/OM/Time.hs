@@ -7,7 +7,7 @@ module OM.Time (
 ) where
 
 
-import Control.Lens ((&), (.~))
+import Control.Lens ((&), (?~))
 import Data.Aeson (ToJSON, FromJSON)
 import Data.Binary (Binary, get, put)
 import Data.Proxy (Proxy(Proxy))
@@ -34,6 +34,6 @@ instance ToSchema Time where
   declareNamedSchema _proxy = do
     schema <- schemaFor (Proxy :: Proxy UTCTime)
     return . NamedSchema Nothing $ schema
-      & description .~ Just "ISO-8601 time."
+      & description ?~ "ISO-8601 time."
 
 
