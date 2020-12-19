@@ -3,5 +3,5 @@ extra-package-dbs: []
 packages:
 - .
 extra-deps:
-- om-json-0.2.5.1
-resolver: lts-14.27
+  - http://localhost:4563/package/om-json-0.2.5.2.tar.gz
+resolver: lts-16.26
