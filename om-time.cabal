@@ -21,13 +21,13 @@ library
   -- other-modules:
   -- other-extensions:
   build-depends:
-    aeson    >= 1.4.2.0 && < 1.5,
-    base     >= 4.12    && < 4.13,
-    binary   >= 0.8.3.0 && < 0.9,
-    lens     >= 4.17    && < 4.18,
-    om-json  >= 0.2.5.1 && < 0.3,
-    swagger2 >= 2.4     && < 2.5,
-    time     >= 1.6.0.1 && < 1.9
+    aeson    >= 1.4.7.1 && < 1.5,
+    base     >= 4.13    && < 4.14,
+    binary   >= 0.8.7.0 && < 0.9,
+    lens     >= 4.18.1  && < 4.19,
+    om-json  >= 0.2.5.2 && < 0.3,
+    swagger2 >= 2.5     && < 2.6,
+    time     >= 1.9.3   && < 1.10
   hs-source-dirs: src
   default-language: Haskell2010
 
