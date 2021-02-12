@@ -1,20 +1,25 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 {- | Basic missing time utilities. -}
 module OM.Time (
+  MonadTimeSpec(..),
   Time(..),
 ) where
 
-
 import Control.Lens ((&), (?~))
-import Data.Aeson (ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+import Control.Monad.Trans.Class (MonadTrans(lift))
+import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Binary (Binary, get, put)
 import Data.Proxy (Proxy(Proxy))
-import Data.Swagger (ToSchema, declareNamedSchema,
-   NamedSchema(NamedSchema), description)
-import Data.Time (UTCTime(UTCTime), Day(ModifiedJulianDay))
+import Data.Swagger (NamedSchema(NamedSchema), ToSchema,
+  declareNamedSchema, description)
+import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime))
 import OM.JSON (schemaFor)
+import System.Clock (TimeSpec)
+import qualified System.Clock as Clock
 
 
 {- | Wrapper around 'UTCTime', used mainly to provide a 'Binary' instance. -}
@@ -35,5 +40,23 @@ instance ToSchema Time where
     schema <- schemaFor (Proxy :: Proxy UTCTime)
     return . NamedSchema Nothing $ schema
       & description ?~ "ISO-8601 time."
+
+
+{- | A monad that can produce the current time as a TimeSpec. -}
+class MonadTimeSpec m where
+  getTime :: m TimeSpec
+
+instance MonadTimeSpec IO where
+  getTime = Clock.getTime Clock.MonotonicCoarse
+
+instance {-# OVERLAPPABLE #-}
+    ( Monad m
+    , MonadTimeSpec m
+    , MonadTrans t
+    )
+  =>
+    MonadTimeSpec (t m)
+  where
+    getTime = lift getTime
 
 
