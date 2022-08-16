@@ -47,6 +47,7 @@ instance ToSchema Time where
 class MonadTimeSpec m where
   getTime :: m TimeSpec
 
+{- | The IO instances uses 'Clock.getTime' 'Clock.MonotonicCoarse'. -}
 instance MonadTimeSpec IO where
   getTime = Clock.getTime Clock.MonotonicCoarse
 
