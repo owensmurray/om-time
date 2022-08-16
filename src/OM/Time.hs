@@ -44,7 +44,7 @@ instance ToSchema Time where
 
 
 {- | A monad that can produce the current time as a TimeSpec. -}
-class MonadTimeSpec m where
+class (Monad m) => MonadTimeSpec m where
   getTime :: m TimeSpec
 
 {- | The IO instances uses 'Clock.getTime' 'Clock.MonotonicCoarse'. -}
@@ -52,7 +52,7 @@ instance MonadTimeSpec IO where
   getTime = Clock.getTime Clock.MonotonicCoarse
 
 instance {-# OVERLAPPABLE #-}
-    ( Monad m
+    ( Monad (t m)
     , MonadTimeSpec m
     , MonadTrans t
     )
