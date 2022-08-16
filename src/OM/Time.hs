@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -26,7 +27,7 @@ import qualified System.Clock as Clock
 newtype Time = Time {
     unTime :: UTCTime
   }
-  deriving (Eq, Ord, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving newtype (Eq, Ord, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 instance Show Time where
   showsPrec n = showsPrec n . unTime
 instance Binary Time where
