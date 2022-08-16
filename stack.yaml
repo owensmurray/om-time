@@ -1,7 +1,7 @@
 flags: {}
 extra-package-dbs: []
 packages:
-- .
+  - .
 extra-deps:
-  - http://localhost:4563/package/om-json-0.2.5.2.tar.gz
-resolver: lts-16.26
+  - http://localhost:4563/package/om-json-0.2.5.4.tar.gz
+resolver: lts-19.18
