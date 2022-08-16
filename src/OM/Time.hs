@@ -1,5 +1,7 @@
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE UndecidableInstances #-}
 
@@ -7,6 +9,8 @@
 module OM.Time (
   MonadTimeSpec(..),
   Time(..),
+  timed,
+  diffTimeSpec
 ) where
 
 import Control.Lens ((&), (?~))
@@ -16,7 +20,7 @@ import Data.Binary (Binary, get, put)
 import Data.Proxy (Proxy(Proxy))
 import Data.Swagger (NamedSchema(NamedSchema), ToSchema,
   declareNamedSchema, description)
-import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime))
+import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime), DiffTime)
 import OM.JSON (schemaFor)
 import System.Clock (TimeSpec)
 import qualified System.Clock as Clock
@@ -26,7 +30,7 @@ import qualified System.Clock as Clock
 newtype Time = Time {
     unTime :: UTCTime
   }
-  deriving (Eq, Ord, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving newtype (Eq, Ord, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 instance Show Time where
   showsPrec n = showsPrec n . unTime
 instance Binary Time where
@@ -43,14 +47,15 @@ instance ToSchema Time where
 
 
 {- | A monad that can produce the current time as a TimeSpec. -}
-class MonadTimeSpec m where
+class (Monad m) => MonadTimeSpec m where
   getTime :: m TimeSpec
 
+{- | The IO instances uses 'Clock.getTime' 'Clock.MonotonicCoarse'. -}
 instance MonadTimeSpec IO where
   getTime = Clock.getTime Clock.MonotonicCoarse
 
 instance {-# OVERLAPPABLE #-}
-    ( Monad m
+    ( Monad (t m)
     , MonadTimeSpec m
     , MonadTrans t
     )
@@ -58,5 +63,23 @@ instance {-# OVERLAPPABLE #-}
     MonadTimeSpec (t m)
   where
     getTime = lift getTime
+
+
+{- | Perform an action and measure how long it takes. -}
+timed
+  :: MonadTimeSpec m
+  => m a
+  -> m (a, DiffTime)
+timed action = do
+  start <- getTime
+  result <- action
+  end <- getTime
+  pure (result, diffTimeSpec end start)
+
+
+{- | Take the difference of two time specs, as a 'DiffTime'. -}
+diffTimeSpec :: TimeSpec -> TimeSpec -> DiffTime
+diffTimeSpec a b =
+  realToFrac (Clock.toNanoSecs (Clock.diffTimeSpec a b)) / 1_000_000_000
 
 
