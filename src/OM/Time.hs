@@ -10,13 +10,16 @@ module OM.Time (
   MonadTimeSpec(..),
   Time(..),
   timed,
-  diffTimeSpec
+  diffTimeSpec,
+  addTime,
 ) where
+
 
 import Control.Lens ((&), (?~))
 import Control.Monad.Trans.Class (MonadTrans(lift))
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Binary (Binary, get, put)
+import Data.Int (Int64)
 import Data.Proxy (Proxy(Proxy))
 import Data.Swagger (NamedSchema(NamedSchema), ToSchema,
   declareNamedSchema, description)
@@ -81,5 +84,23 @@ timed action = do
 diffTimeSpec :: TimeSpec -> TimeSpec -> DiffTime
 diffTimeSpec a b =
   realToFrac (Clock.toNanoSecs (Clock.diffTimeSpec a b)) / 1_000_000_000
+
+
+{- | Add a 'DiffTime' to a 'TimeSpec'. -}
+addTime :: DiffTime -> TimeSpec -> TimeSpec
+addTime diff time =
+  let
+    rat = toRational diff
+
+    secDiff :: Int64
+    secDiff = truncate rat
+
+    nsecDiff :: Int64
+    nsecDiff = truncate ((toRational diff - toRational secDiff) * 1_000_000_000)
+  in
+    Clock.TimeSpec {
+      Clock.sec = Clock.sec time + secDiff,
+      Clock.nsec = Clock.nsec time + nsecDiff
+    }
 
 
