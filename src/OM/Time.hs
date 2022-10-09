@@ -15,16 +15,11 @@ module OM.Time (
 ) where
 
 
-import Control.Lens ((&), (?~))
 import Control.Monad.Trans.Class (MonadTrans(lift))
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Binary (Binary, get, put)
 import Data.Int (Int64)
-import Data.Proxy (Proxy(Proxy))
-import Data.Swagger (NamedSchema(NamedSchema), ToSchema,
-  declareNamedSchema, description)
 import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime), DiffTime)
-import OM.JSON (schemaFor)
 import System.Clock (TimeSpec)
 import qualified System.Clock as Clock
 
@@ -42,11 +37,6 @@ instance Binary Time where
   get = do
     (day, tod) <- get
     return (Time (UTCTime (ModifiedJulianDay day) (fromRational tod)))
-instance ToSchema Time where
-  declareNamedSchema _proxy = do
-    schema <- schemaFor (Proxy :: Proxy UTCTime)
-    return . NamedSchema Nothing $ schema
-      & description ?~ "ISO-8601 time."
 
 
 {- | A monad that can produce the current time as a TimeSpec. -}
