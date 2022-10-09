@@ -18,9 +18,6 @@ common dependencies
     , base         >= 4.15.1.0 && < 4.16
     , binary       >= 0.8.8.0  && < 0.9
     , clock        >= 0.8.3    && < 0.9
-    , lens         >= 5.0.1    && < 5.1
-    , om-json      >= 0.2.5.4  && < 0.3
-    , swagger2     >= 2.8.4    && < 2.9
     , time         >= 1.9.3    && < 1.10
     , transformers >= 0.5.6.2  && < 0.6
 
