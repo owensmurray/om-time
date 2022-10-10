@@ -12,6 +12,7 @@ copyright:           2022 Rick Owens
 build-type:          Simple
 extra-source-files:
   LICENSE
+  README.md
 
 common dependencies
   build-depends:
