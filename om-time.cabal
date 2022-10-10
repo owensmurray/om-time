@@ -1,6 +1,6 @@
 cabal-version:       3.0
 name:                om-time
-version:             0.3.0.0
+version:             0.3.0.1
 synopsis:            Time utilities for OM style programming.
 -- description:
 license:             MIT
@@ -12,6 +12,7 @@ copyright:           2022 Rick Owens
 build-type:          Simple
 extra-source-files:
   LICENSE
+  README.md
 
 common dependencies
   build-depends:
