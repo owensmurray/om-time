@@ -1,8 +1,9 @@
 cabal-version:       3.0
 name:                om-time
-version:             0.3.0.1
-synopsis:            Time utilities for OM style programming.
--- description:
+version:             0.3.0.2
+synopsis:            Misc. time utilites
+description:         A monad interface for obtain the current TimeSpec, along
+                     with a few other utilities.
 license:             MIT
 license-file:        LICENSE
 author:              Rick Owens
