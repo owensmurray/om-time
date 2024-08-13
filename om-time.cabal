@@ -1,6 +1,6 @@
 cabal-version:       3.0
 name:                om-time
-version:             0.3.0.4
+version:             0.3.0.5
 synopsis:            Misc. time utilites
 description:         A monad interface for obtain the current TimeSpec, along
                      with a few other utilities.
