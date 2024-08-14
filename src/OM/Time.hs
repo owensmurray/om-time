@@ -12,14 +12,22 @@ module OM.Time (
   timed,
   diffTimeSpec,
   addTime,
+  NowT,
+  runNowT,
 ) where
 
 
 import Control.Monad.Trans.Class (MonadTrans(lift))
+import Control.Monad.Trans.Reader (ReaderT(ReaderT, runReaderT), ask)
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
-import Data.Binary (Binary, get, put)
+import Data.Binary (Binary(get, put))
 import Data.Int (Int64)
 import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime), DiffTime)
+import Prelude
+  ( Applicative(pure), Fractional((/), fromRational), Monad(return)
+  , Num((*), (+), (-)), Real(toRational), RealFrac(truncate), Show(showsPrec)
+  , (.), Eq, Functor, IO, Ord, flip, realToFrac
+  )
 import System.Clock (TimeSpec)
 import qualified System.Clock as Clock
 
@@ -32,7 +40,7 @@ newtype Time = Time {
 instance Show Time where
   showsPrec n = showsPrec n . unTime
 instance Binary Time where
-  put (Time (UTCTime (ModifiedJulianDay day) tod)) = 
+  put (Time (UTCTime (ModifiedJulianDay day) tod)) =
     put (day, toRational tod)
   get = do
     (day, tod) <- get
@@ -92,5 +100,24 @@ addTime diff time =
       Clock.sec = Clock.sec time + secDiff,
       Clock.nsec = Clock.nsec time + nsecDiff
     }
+
+
+{-| An instance of MonadTimeSpec where the time is always a constant value.  -}
+newtype NowT m a = NowT
+  { _unNowT :: ReaderT TimeSpec m a
+  }
+  deriving newtype
+    ( Applicative
+    , Functor
+    , Monad
+    , MonadTrans
+    )
+instance (Monad m) => MonadTimeSpec (NowT m) where
+  getTime = NowT ask
+
+
+runNowT :: TimeSpec -> NowT m a -> m a
+runNowT now (NowT action) =
+  flip runReaderT now action
 
 
