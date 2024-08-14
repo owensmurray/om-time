@@ -17,9 +17,14 @@ module OM.Time (
 
 import Control.Monad.Trans.Class (MonadTrans(lift))
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
-import Data.Binary (Binary, get, put)
+import Data.Binary (Binary(get, put))
 import Data.Int (Int64)
 import Data.Time (Day(ModifiedJulianDay), UTCTime(UTCTime), DiffTime)
+import Prelude
+  ( Applicative(pure), Fractional((/), fromRational), Monad(return)
+  , Num((*), (+), (-)), Real(toRational), RealFrac(truncate), Show(showsPrec)
+  , (.), Eq, IO, Ord, realToFrac
+  )
 import System.Clock (TimeSpec)
 import qualified System.Clock as Clock
 
@@ -32,7 +37,7 @@ newtype Time = Time {
 instance Show Time where
   showsPrec n = showsPrec n . unTime
 instance Binary Time where
-  put (Time (UTCTime (ModifiedJulianDay day) tod)) = 
+  put (Time (UTCTime (ModifiedJulianDay day) tod)) =
     put (day, toRational tod)
   get = do
     (day, tod) <- get
