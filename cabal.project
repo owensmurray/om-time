@@ -1,6 +1,9 @@
 packages:
   "."
+
 package om-time
   ghc-options:
     -Werror
+
+allow-newer: base, template-haskell
 
