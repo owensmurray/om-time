@@ -12,6 +12,8 @@ jobs:
           - '9.6'
           - '9.8'
           - '9.10'
+          - '9.12'
+          - '9.14'
         cabal-version: ['3.12.1.0']
     steps:
       # Checkout
