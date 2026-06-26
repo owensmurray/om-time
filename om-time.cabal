@@ -18,11 +18,11 @@ extra-source-files:
 
 common dependencies
   build-depends:
-    , aeson        >= 2.1.2.1  && < 2.3
+    , aeson        >= 2.1.2.1  && < 2.4
     , base         >= 4.15.1.0 && < 4.23
     , binary       >= 0.8.9.1  && < 0.9
     , clock        >= 0.8.3    && < 0.9
-    , time         >= 1.12.2   && < 1.15
+    , time         >= 1.12.2   && < 1.16
     , transformers >= 0.5.6.2  && < 0.7
 
 common warnings
